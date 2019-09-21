@@ -1,0 +1,32 @@
+﻿<UserControl x:Class="BillingManagement.View.BillSearchView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:BillingManagement.View"
+             xmlns:vm="clr-namespace:BillingManagement.ViewModel"
+             local:ViewModelLocator.LoadDataContext="True"
+             mc:Ignorable="d" 
+             d:DesignHeight="800" d:DesignWidth="1600">
+
+    <UserControl.Resources>
+        <vm:NavigatorViewModel x:Key="Navigator" />
+    </UserControl.Resources>
+
+    <StackPanel Orientation = "Vertical">
+        <StackPanel Orientation="Horizontal">
+            <Button Content="Add Bill" Command="{Binding AddBill}" Margin="10" Padding="5"/>
+            <Button Content="Go Back" Command="{Binding OnGoHome}" Margin="10" Padding="5"/>           
+        </StackPanel>
+        <ListBox HorizontalContentAlignment="Stretch" ItemsSource="{Binding BillList}">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Vertical" Margin="10">
+                        <TextBlock Text="{Binding BillName, Mode=OneWay, StringFormat= Bill Name: {0}}"/>
+                        <TextBlock Text="{Binding Amount, Mode=OneWay, StringFormat=Amount Oustanding: ${0}}"/>
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+    </StackPanel>    
+</UserControl>

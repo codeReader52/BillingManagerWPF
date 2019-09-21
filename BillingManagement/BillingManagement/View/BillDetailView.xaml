@@ -1,0 +1,58 @@
+﻿<UserControl x:Class="BillingManagement.View.BillDetailView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:BillingManagement.View"
+             local:ViewModelLocator.LoadDataContext="True"
+             xmlns:util="clr-namespace:BillingManagement.Utils"
+             mc:Ignorable="d" 
+             d:DesignHeight="800" d:DesignWidth="1600">
+
+    <UserControl.Resources>
+        <util:BillTypeValueConverter x:Key="BillTypeConverter" />
+    </UserControl.Resources>
+
+    <Grid >
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="89*" />
+            <ColumnDefinition Width="254*" />
+            <ColumnDefinition Width="95*" />
+            <ColumnDefinition Width="362*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="33*" />
+            <RowDefinition Height="33*" />
+            <RowDefinition Height="33*" />
+            <RowDefinition Height="33*" />
+            <RowDefinition Height="33*" />
+            <RowDefinition Height="33*" />
+            <RowDefinition Height="289*" />
+        </Grid.RowDefinitions>
+
+        <Label Content="Bill name"/>
+        <TextBox Grid.Column="1" Text="{Binding BillName, Mode=OneWayToSource}"/>
+
+        <Label Content="Bill type" Grid.Row="1"/>
+        <ComboBox Grid.Row="1" Grid.Column="1" ItemsSource="{Binding AllBillTypes}" SelectedItem="{Binding BillType}">
+            <ComboBox.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding Converter={StaticResource BillTypeConverter}}"/>
+                </DataTemplate>
+            </ComboBox.ItemTemplate>
+
+        </ComboBox>
+
+        <Label Content="Due Date" Grid.Row="2"/>
+        <DatePicker Grid.Row="2" Grid.Column="1" SelectedDate="{Binding DueDate, Mode=TwoWay}"/>
+
+        <Label Content="Amount" Grid.Row="3"/>
+        <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding Amount, Mode=TwoWay}"/>
+
+        <Label Content="Description" Grid.Row="4"/>
+        <TextBox Grid.Row="4" Grid.Column="1" Text="{Binding Description, Mode=TwoWay}"/>
+
+        <Button Content="Record" Grid.Row="0" Grid.Column="2" Command="{Binding OnRecordButtonClick}" Margin="15,5,0,0"/>
+        <Button Content="Cancel" Grid.Row="1" Grid.Column="2" Command="{Binding OnCancel}" Margin="15,5,0,0"/>
+    </Grid>
+</UserControl>
