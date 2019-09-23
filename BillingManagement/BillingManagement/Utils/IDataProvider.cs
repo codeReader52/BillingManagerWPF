@@ -9,7 +9,7 @@ namespace BillingManagement.Utils
     public interface IDataProvider
     {
         bool FindData(int id, out object output);
-        bool ModifyData(int id, object obj);
-        bool AddData(object obj);
+        bool ModifyAndSave(int id, object obj);
+        bool AddAndSave(object obj);
     }
 }

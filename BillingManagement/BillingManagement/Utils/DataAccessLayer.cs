@@ -7,20 +7,24 @@ namespace BillingManagement.Utils
 {
     public class DataAccessLayer : DbContext, IDataProvider
     {
-        private const string _connectionString = @"Data Source=C:\Users\Tuan D Tran\Desktop\CSharp\BillingManagement\BillingManagementTest\bin\Debug\db\bill.sqlite3;";
-
-        public DataAccessLayer() : base()
+        private string _connectionString = "";
+        public DataAccessLayer(string connectionString) : base()
+        {
+            _connectionString = connectionString;
+        }
+        public DataAccessLayer(): this(Constants.CONN_STRING)
         {
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlite(_connectionString);
+            base.OnConfiguring(optionsBuilder);
         }
 
         public DbSet<BillInfo> BillInfos { get; set; }
 
-        public bool AddData(object obj)
+        public bool AddAndSave(object obj)
         {
             if (obj is BillInfo)
             {
@@ -44,10 +48,15 @@ namespace BillingManagement.Utils
             return true;
         }
 
-        public bool ModifyData(int id, object obj)
+        public bool ModifyAndSave(int id, object obj)
         {
             if(obj is BillInfo && FindData(id, out object dbObj))
             {
+                if (dbObj == null)
+                {
+                    return false;
+                }
+
                 BillInfo existingBillInfo = dbObj as BillInfo;
                 BillInfo inComingBillInfo = obj as BillInfo;
                 existingBillInfo.Amount = inComingBillInfo.Amount;

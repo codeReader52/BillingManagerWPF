@@ -165,13 +165,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Migrations\20190923114651_billing1.cs" />
-    <Compile Include="Migrations\20190923114651_billing1.designer.cs">
-      <DependentUpon>20190923114651_billing1.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\20190923120728_billing2.cs" />
-    <Compile Include="Migrations\20190923120728_billing2.designer.cs">
-      <DependentUpon>20190923120728_billing2.cs</DependentUpon>
+    <Compile Include="Migrations\20190923143358_billing1.cs" />
+    <Compile Include="Migrations\20190923143358_billing1.designer.cs">
+      <DependentUpon>20190923143358_billing1.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\DataAccessLayerModelSnapshot.cs" />
     <Compile Include="Model\Constants.cs" />

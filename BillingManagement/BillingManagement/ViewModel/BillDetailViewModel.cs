@@ -73,7 +73,14 @@ namespace BillingManagement.ViewModel
 
         public BillDetailViewModel(IBillReaderWriter billwriter)
         {
-            _bill = new BillInfo(BillType.Unknown, DateTime.Now, 0, "");
+            _bill = new BillInfo
+            {
+                Type =BillType.Unknown,
+                BillName="",
+                DueDate =DateTime.Now,
+                Amount =0,
+                Description =""
+            };
             _billWriter = billwriter;
             OnRecordButtonClick = new RelayCommand((_) => CanSave(), (_) => DoSave());
         }

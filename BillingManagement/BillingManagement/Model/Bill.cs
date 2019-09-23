@@ -27,13 +27,5 @@ namespace BillingManagement.Model
         [Key]
         [DatabaseGenerat‌ed(DatabaseGeneratedOp‌​tion.Identity)]
         public int Id { get; set; }
-
-        public BillInfo(BillType type, DateTime dueDate, double amount, string description)
-        {
-            Type = type;
-            DueDate = dueDate;
-            Amount = amount;
-            Description = description;
-        }
     }
 }

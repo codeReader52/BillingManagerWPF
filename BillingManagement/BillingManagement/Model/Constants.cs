@@ -9,5 +9,6 @@ namespace BillingManagement.Model
     public static class Constants
     {
         public static string BILLING_FOLDER = "__bills";
+        public static string CONN_STRING = @"Data Source=C:\Users\Tuan D Tran\Desktop\CSharp\BillingManagement\BillingManagement\bin\Debug\db\bill.sqlite3;";
     }
 }

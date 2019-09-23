@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BillingManagement.Migrations
 {
     [DbContext(typeof(DataAccessLayer))]
-    [Migration("20190923114651_billing1")]
+    [Migration("20190923143358_billing1")]
     partial class billing1
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
