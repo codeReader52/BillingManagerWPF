@@ -16,7 +16,7 @@ namespace BillingManagementTest
         public void TestCreateNewBill()
         {
             MockBillReaderWriter billWriter = new MockBillReaderWriter();
-            BillDetailViewModel billDetail = new BillDetailViewModel(billWriter, GetMockSeqManager(0));
+            BillDetailViewModel billDetail = new BillDetailViewModel(billWriter);
             billDetail.Amount = 1;
             billDetail.BillName = "Test name";
             billDetail.BillType = BillType.Food;
@@ -37,31 +37,13 @@ namespace BillingManagementTest
         public void TestBillDetailViewWillAlwaysGetAllBillTypes()
         {
             Mock<IBillReaderWriter> mockWriter = new Mock<IBillReaderWriter>();
-            BillDetailViewModel vm = new BillDetailViewModel(mockWriter.Object, GetMockSeqManager(0));
+            BillDetailViewModel vm = new BillDetailViewModel(mockWriter.Object);
 
             Assert.AreEqual(vm.AllBillTypes.Count, 4);
             foreach (BillType type in new List<BillType> { BillType.Food, BillType.MiscSpending, BillType.Unknown, BillType.Utility })
             {
                 Assert.IsTrue(vm.AllBillTypes.Contains(type));
             }
-        }
-
-        [TestMethod]
-        public void TestSavedBillHasAnId()
-        {
-            MockBillReaderWriter billWriter = new MockBillReaderWriter();
-            BillDetailViewModel billDetail = new BillDetailViewModel(billWriter, GetMockSeqManager(0));
-
-            billDetail.OnRecordButtonClick.Execute(null);
-            Assert.AreEqual(billWriter.BillSaved.Id, 1);
-        }
-
-        ISequenceManager GetMockSeqManager(int startingIndex)
-        {
-            Mock<ISequenceManager> mockSeqMan = new Mock<ISequenceManager>();
-            mockSeqMan.Setup(x => x.GetCurrIndex()).Returns(startingIndex);
-            mockSeqMan.Setup(x => x.SyncIncreaseIndex()).Returns(startingIndex + 1);
-            return mockSeqMan.Object;
         }
     }
 }

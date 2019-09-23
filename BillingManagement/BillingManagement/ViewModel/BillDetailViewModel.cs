@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using System.Collections.ObjectModel;
-using System.Windows;
 using System.Windows.Input;
 using BillingManagement.Model;
 using BillingManagement.Utils;
@@ -72,11 +71,10 @@ namespace BillingManagement.ViewModel
             }
         }
 
-        public BillDetailViewModel(IBillReaderWriter billwriter, ISequenceManager seqManager)
+        public BillDetailViewModel(IBillReaderWriter billwriter)
         {
             _bill = new BillInfo(BillType.Unknown, DateTime.Now, 0, "");
             _billWriter = billwriter;
-            _seqMan = seqManager;
             OnRecordButtonClick = new RelayCommand((_) => CanSave(), (_) => DoSave());
         }
 
@@ -90,13 +88,10 @@ namespace BillingManagement.ViewModel
 
         private void DoSave()
         {
-            int newIndex = _seqMan.SyncIncreaseIndex();
-            _bill.Id = newIndex;
             _billWriter.Record(_bill, out string error);
         }
 
         private BillInfo _bill = null;
         private IBillReaderWriter _billWriter = null;
-        private ISequenceManager _seqMan = null;
     }
 }

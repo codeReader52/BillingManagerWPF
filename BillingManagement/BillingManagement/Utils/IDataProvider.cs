@@ -6,9 +6,10 @@ using System.Threading.Tasks;
 
 namespace BillingManagement.Utils
 {
-    public interface ISequenceManager
+    public interface IDataProvider
     {
-        int SyncIncreaseIndex();
-        int GetCurrIndex();
+        bool FindData(int id, out object output);
+        bool ModifyData(int id, object obj);
+        bool AddData(object obj);
     }
 }

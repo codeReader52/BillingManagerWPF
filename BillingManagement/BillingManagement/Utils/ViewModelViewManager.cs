@@ -10,7 +10,6 @@ namespace BillingManagement.Utils
         public static string MainWindow = "MainWindow";
         public static string BillDetailView = "BillDetailView";
         public static string BillSearchView = "BillSearchView";
-        private static ISequenceManager _sequenceManager = new SequenceManager(0);
         private static NavigatorViewModel _navigator = null;
 
         public static IDictionary<string, Func<object>> MapViewNameToViewModelFactory = new Dictionary<string, Func<object>>
@@ -35,7 +34,7 @@ namespace BillingManagement.Utils
         private static BillDetailViewModel GetBillDetailViewModel()
         {
             IBillReaderWriter writer = new BillJsonReaderWriter(Constants.BILLING_FOLDER);
-            return new BillDetailViewModel(writer, _sequenceManager);
+            return new BillDetailViewModel(writer);
         }
 
         public static bool IsChildView(string viewName)
