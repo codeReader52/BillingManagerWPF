@@ -8,7 +8,7 @@ namespace BillingManagement.View
 {
     public static class ViewModelViewManager
     {
-        private static NavigatorViewModel _navigator = null;
+        private static NavigatorViewModel _navigator = new NavigatorViewModel();
 
         public static IDictionary<string, Func<object>> MapViewNameToViewModelFactory = new Dictionary<string, Func<object>>
         {
@@ -19,7 +19,6 @@ namespace BillingManagement.View
 
         private static NavigatorViewModel GetNavigator()
         {
-            _navigator = new NavigatorViewModel();
             return _navigator;
         }
 

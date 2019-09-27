@@ -43,7 +43,9 @@ namespace BillingManagementTest.Mocks
                 Amount = 2.3,
                 Description = "Test description food",
                 BillName = "Test name 1",
-                Id = 1
+                Id = 1,
+                IsAlreadyPaid = false,
+                Attachement = new byte[3] { 1, 2, 3 },
             };
             BillInfo bill2 =  new BillInfo
             {
@@ -52,7 +54,9 @@ namespace BillingManagementTest.Mocks
                 Amount = 4.5,
                 Description = "Test description utility",
                 BillName = "Test name 2",
-                Id = 2
+                Id = 2,
+                IsAlreadyPaid = true,
+                Attachement = new byte[4] { 5, 6, 7, 8},
             };
             BillInfo bill3 = new BillInfo
             {
@@ -61,7 +65,9 @@ namespace BillingManagementTest.Mocks
                 Amount = 6.7,
                 Description = "Test description misc",
                 BillName = "Test name 3",
-                Id = 3
+                Id = 3,
+                IsAlreadyPaid = false,
+                Attachement = new byte[3] {2, 9, 3},
             };
             return new List<BillInfo> { bill1, bill2, bill3 };
         }

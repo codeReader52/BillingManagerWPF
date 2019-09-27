@@ -25,6 +25,7 @@
             </DataGrid.InputBindings>
             <DataGrid.Columns>
                 <DataGridTextColumn Header = "Name" Binding = "{Binding BillName}" IsReadOnly="True" Width="300"/>
+                <DataGridCheckBoxColumn Header = "Paid" Binding = "{Binding IsAlreadyPaid}" IsReadOnly="True" Width="40"/>
                 <DataGridTextColumn Header = "Amount" Binding = "{Binding Amount}" IsReadOnly="True" Width="200"/>
                 <DataGridTextColumn Header = "Due Date" Binding = "{Binding DueDate}" IsReadOnly="True" Width="200"/>
                 <DataGridTextColumn Header = "Type" Binding = "{Binding Type}" IsReadOnly="True" Width="150"/>

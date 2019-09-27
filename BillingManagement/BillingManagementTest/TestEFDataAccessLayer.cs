@@ -88,24 +88,73 @@ namespace BillingManagementTest
             };
         }
 
+        private void AddToDb(BillInfo bill)
+        {
+            using (DataAccessLayer dbAccess = new DataAccessLayer(_connString))
+            {
+                dbAccess.AddAndSave(bill);
+            }
+        }
+
+        private void CompareDbBillWithExpectedBill( BillInfo expectedBill)
+        {
+            using (DataAccessLayer dbAccess2 = new DataAccessLayer(_connString))
+            {
+                dbAccess2.FindBillById(expectedBill.Id, out BillInfo actualBill);
+                Assert.IsTrue(actualBill.SameData(expectedBill));
+            }
+        }
+
         [TestMethod]
         public void TestWriteRead()
         {
             foreach (int expectedId in new List<int> { _currId + 1, _currId + 2, _currId + 3 })
             {
                 BillInfo bill = GenerateRandomBillInfo(expectedId);
-                using (DataAccessLayer dbAccess = new DataAccessLayer(_connString))
-                {
-                    dbAccess.AddAndSave(bill);
-                }
-
-                using (DataAccessLayer dbAccess2 = new DataAccessLayer(_connString))
-                {
-                    dbAccess2.FindBillById(expectedId, out BillInfo actualBill);
-                    Assert.IsTrue(actualBill.SameData(bill));
-                    Assert.AreEqual(actualBill.Id, expectedId);
-                }
+                AddToDb(bill);
+                CompareDbBillWithExpectedBill(bill);
             }
+        }
+
+        private void ModifyAndSave(BillInfo bill)
+        {
+            using (DataAccessLayer dbAccess = new DataAccessLayer(_connString))
+            {
+                dbAccess.ModifyAndSave(bill);
+            }
+        }
+
+        [TestMethod]
+        public void TestUpdate()
+        {
+            BillInfo bill = GenerateRandomBillInfo(_currId + 1);
+            bill.Type = BillType.Food;
+            AddToDb(bill);
+            CompareDbBillWithExpectedBill(bill);
+
+            bill.Amount += 1;
+            ModifyAndSave(bill);
+            CompareDbBillWithExpectedBill(bill);
+
+            bill.BillName += " additional part of name";
+            ModifyAndSave(bill);
+            CompareDbBillWithExpectedBill(bill);
+
+            bill.Description += "additional description";
+            ModifyAndSave(bill);
+            CompareDbBillWithExpectedBill(bill);
+
+            bill.IsAlreadyPaid = !bill.IsAlreadyPaid;
+            ModifyAndSave(bill);
+            CompareDbBillWithExpectedBill(bill);
+
+            bill.DueDate = bill.DueDate.AddDays(3);
+            ModifyAndSave(bill);
+            CompareDbBillWithExpectedBill(bill);
+
+            bill.Type = BillType.MiscSpending;
+            ModifyAndSave(bill);
+            CompareDbBillWithExpectedBill(bill);
         }
 
         [TestMethod]
@@ -115,10 +164,7 @@ namespace BillingManagementTest
             foreach (int expectedId in new List<int> { _currId + 1, _currId + 2, _currId + 3 })
             {
                 BillInfo bill = GenerateRandomBillInfo(expectedId);
-                using (DataAccessLayer dbAccess = new DataAccessLayer(_connString))
-                {
-                    dbAccess.AddAndSave(bill);
-                }
+                AddToDb(bill);
                 bills.Add(bill);
             }
 
@@ -134,13 +180,63 @@ namespace BillingManagementTest
         [TestMethod]
         public void TestSqlListBillReaderWithFilterByDateTime()
         {
+            IList<BillInfo> bills = new List<BillInfo>();
+            List<int> newIds = new List<int> { _currId + 1, _currId + 2, _currId + 3, _currId + 4 };
+            IDictionary<int, DateTime> duedates = new Dictionary<int, DateTime>
+            {
+                {newIds[0] , new DateTime(1990, 10, 1) },
+                {newIds[1] , new DateTime(1990, 10, 2) },
+                {newIds[2] , new DateTime(1990, 10, 3) },
+                {newIds[3] , new DateTime(1990, 10, 4) }
+            };
+            foreach (int expectedId in newIds)
+            {
+                BillInfo bill = GenerateRandomBillInfo(expectedId);
+                bill.DueDate = duedates[expectedId];
+                AddToDb(bill);
+                bills.Add(bill);
+            }
 
+            SqliteDbBillReaderWriter sqliteReader = new SqliteDbBillReaderWriter(_connString);
+            IList<BillInfo> retBills = sqliteReader.GetBillByFilter(
+                bill => bill.DueDate >= new DateTime(1990, 10, 2) && bill.DueDate <= new DateTime(1990, 10, 3));
+
+            Assert.AreEqual(retBills.Count, 2);
+            Assert.AreEqual(retBills[0].Id, newIds[1]);
+            Assert.AreEqual(retBills[1].Id, newIds[2]);
         }
 
         [TestMethod]
         public void TestSqlListBillReaderWithFilterByPaidStatus()
         {
+            List<BillInfo> bills = new List<BillInfo>();
+            List<int> newIds = new List<int> { _currId + 1, _currId + 2, _currId + 3, _currId + 4 };
+            IDictionary<int, bool> paidstatus = new Dictionary<int, bool>
+            {
+                {newIds[0] , true },
+                {newIds[1] , false },
+                {newIds[2] , true },
+                {newIds[3] , true }
+            };
+            foreach (int expectedId in newIds)
+            {
+                BillInfo bill = GenerateRandomBillInfo(expectedId);
+                bill.IsAlreadyPaid = paidstatus[expectedId];
+                AddToDb(bill);
+                bills.Add(bill);
+            }
 
+            SqliteDbBillReaderWriter sqliteReader = new SqliteDbBillReaderWriter(_connString);
+            IList<BillInfo> paidBills = sqliteReader.GetBillByFilter(bill => bill.IsAlreadyPaid);
+
+            Assert.AreEqual(paidBills.Count, 3);
+            Assert.AreEqual(paidBills[0].Id, newIds[0]);
+            Assert.AreEqual(paidBills[1].Id, newIds[2]);
+            Assert.AreEqual(paidBills[2].Id, newIds[3]);
+
+            IList<BillInfo> unpaidBills = sqliteReader.GetBillByFilter(bill => !bill.IsAlreadyPaid);
+            Assert.AreEqual(unpaidBills.Count, 1);
+            Assert.AreEqual(unpaidBills[0].Id, newIds[1]);
         }
 
         [TestMethod]

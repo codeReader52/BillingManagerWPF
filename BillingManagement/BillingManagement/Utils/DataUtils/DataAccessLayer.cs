@@ -77,10 +77,7 @@ namespace BillingManagement.Utils
         {
             if(FindBillById(inComingBillInfo.Id, out BillInfo existingBillInfo))
             {
-                existingBillInfo.Amount = inComingBillInfo.Amount;
-                existingBillInfo.Description = inComingBillInfo.Description;
-                existingBillInfo.DueDate = inComingBillInfo.DueDate;
-                existingBillInfo.BillName = inComingBillInfo.BillName;
+                existingBillInfo.SetDataFrom(inComingBillInfo);
                 return Safe_SaveChange();
             }
             else

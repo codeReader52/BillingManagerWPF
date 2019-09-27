@@ -46,6 +46,8 @@
         <Label Content="Due Date" Grid.Row="2"/>
         <DatePicker Grid.Row="2" Grid.Column="1" SelectedDate="{Binding DueDate, Mode=TwoWay}"/>
 
+        <CheckBox Content="Paid" Grid.Row="2" Grid.Column="2" IsChecked="{Binding IsAlreadyPaid, Mode=TwoWay}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+
         <Label Content="Amount" Grid.Row="3"/>
         <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding Amount, Mode=TwoWay}"/>
 

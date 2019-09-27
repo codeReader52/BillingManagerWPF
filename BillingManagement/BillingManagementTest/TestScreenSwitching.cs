@@ -95,6 +95,7 @@ namespace BillingManagementTest
                 Description = billDetail.Description,
                 DueDate = billDetail.DueDate,
                 Type = billDetail.BillType,
+                IsAlreadyPaid = billDetail.IsAlreadyPaid,                
             };
 
             Assert.IsTrue(billInBillDetailModel.SameData(allBills[1]));

@@ -84,16 +84,19 @@ namespace BillingManagement.ViewModel
             }
         }
 
+        public bool IsAlreadyPaid
+        {
+            get { return _bill.IsAlreadyPaid; }
+            set
+            {
+                _bill.IsAlreadyPaid = value;
+                NotifyPropChanged(nameof(IsAlreadyPaid));
+            }
+        }
+
         public BillDetailViewModel(IBillReaderWriter billReaderWriter, NavigatorViewModel navigator)
         {
-            _bill = new BillInfo
-            {
-                Type =BillType.Unknown,
-                BillName="",
-                DueDate =DateTime.Now,
-                Amount =0,
-                Description =""
-            };
+            _bill.DueDate = DateTime.Now;
             _billReaderWriter = billReaderWriter;
             _navigator = navigator;
             if (_navigator.BillIdSelected > 0)
@@ -137,7 +140,7 @@ namespace BillingManagement.ViewModel
         }
 
         private string _errString = "";
-        private BillInfo _bill = null;
+        private BillInfo _bill = new BillInfo();
         private IBillReaderWriter _billReaderWriter = null;
         private NavigatorViewModel _navigator = null;
     }
