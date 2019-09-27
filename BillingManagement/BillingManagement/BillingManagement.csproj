@@ -180,6 +180,9 @@
     <Compile Include="Utils\DataUtils\BillTypeValueConverter.cs" />
     <Compile Include="Utils\DataUtils\IBillReaderWriter.cs" />
     <Compile Include="Utils\DataUtils\SqliteDbBillReaderWriter.cs" />
+    <Compile Include="Utils\UiUtils\FileToByteStreamUiService.cs" />
+    <Compile Include="Utils\UiUtils\IPopUpWinService.cs" />
+    <Compile Include="Utils\UiUtils\MessageBoxService.cs" />
     <Compile Include="ViewModel\BillDetailViewModel.cs" />
     <Compile Include="ViewModel\BillSearchViewModel.cs" />
     <Compile Include="ViewModel\NavigatorViewModel.cs" />

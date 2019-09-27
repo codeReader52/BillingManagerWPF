@@ -29,7 +29,10 @@ namespace BillingManagement.View
 
         private static BillDetailViewModel GetBillDetailViewModel()
         {
-            return new BillDetailViewModel(new SqliteDbBillReaderWriter(Constants.CONN_STRING), _navigator);
+            return new BillDetailViewModel(
+                new SqliteDbBillReaderWriter(Constants.CONN_STRING), 
+                new FileToByteStreamUiService(), 
+                _navigator);
         }
 
         public static bool IsChildView(string viewName)

@@ -18,7 +18,7 @@ namespace BillingManagementTest
             foreach (bool paid in new List<bool> { true, false})
             {
                 MockBillReaderWriter billWriter = new MockBillReaderWriter();
-                BillDetailViewModel billDetail = new BillDetailViewModel(billWriter, new NavigatorViewModel());
+                BillDetailViewModel billDetail = new BillDetailViewModel(billWriter, null, new NavigatorViewModel());
                 billDetail.Amount = 1;
                 billDetail.BillName = "Test name";
                 billDetail.BillType = BillType.Food;
@@ -43,12 +43,29 @@ namespace BillingManagementTest
         public void TestBillDetailViewWillAlwaysGetAllBillTypes()
         {
             Mock<IBillReaderWriter> mockWriter = new Mock<IBillReaderWriter>();
-            BillDetailViewModel vm = new BillDetailViewModel(mockWriter.Object, new NavigatorViewModel());
+            BillDetailViewModel vm = new BillDetailViewModel(mockWriter.Object, null, new NavigatorViewModel());
 
             Assert.AreEqual(vm.AllBillTypes.Count, 4);
             foreach (BillType type in new List<BillType> { BillType.Food, BillType.MiscSpending, BillType.Unknown, BillType.Utility })
             {
                 Assert.IsTrue(vm.AllBillTypes.Contains(type));
+            }
+        }
+
+        [TestMethod]
+        public void TestCanParseFileAndSaveItsContent()
+        {
+            FilePickerMock filePicker = new FilePickerMock();
+            BillDetailViewModel billDetail = new BillDetailViewModel(
+                new MockBillReaderWriter(), filePicker, new NavigatorViewModel());
+            byte[] expectedAttachment = new byte[] { 1, 5, 3, 2 };
+            filePicker.Output = expectedAttachment;
+
+            billDetail.ImportBillAttachment.Execute(null);
+            Assert.AreEqual(billDetail.Attachement.Length, expectedAttachment.Length);
+            for(int i = 0; i < expectedAttachment.Length; i++)
+            {
+                Assert.AreEqual(billDetail.Attachement[i], expectedAttachment[i]);
             }
         }
     }

@@ -68,7 +68,7 @@ namespace BillingManagement.Model
             DueDate = inComingBillInfo.DueDate;
             IsAlreadyPaid = inComingBillInfo.IsAlreadyPaid;
             Type = inComingBillInfo.Type;
-
+            Attachement = inComingBillInfo.Attachement;
         }
     }
 }

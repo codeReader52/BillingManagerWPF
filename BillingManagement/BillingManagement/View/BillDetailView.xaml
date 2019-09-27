@@ -45,9 +45,7 @@
 
         <Label Content="Due Date" Grid.Row="2"/>
         <DatePicker Grid.Row="2" Grid.Column="1" SelectedDate="{Binding DueDate, Mode=TwoWay}"/>
-
-        <CheckBox Content="Paid" Grid.Row="2" Grid.Column="2" IsChecked="{Binding IsAlreadyPaid, Mode=TwoWay}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-
+        
         <Label Content="Amount" Grid.Row="3"/>
         <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding Amount, Mode=TwoWay}"/>
 
@@ -56,7 +54,10 @@
 
         <Button Content="Record" Grid.Row="0" Grid.Column="2" Command="{Binding OnRecordButtonClick}" Margin="15,5,0,0"/>
         <Button Content="Cancel" Grid.Row="1" Grid.Column="2" Command="{Binding OnCancel}" Margin="15,5,0,0"/>
+        <Button Content="Attach Bill File" Grid.Row="2" Grid.Column="2" Command="{Binding ImportBillAttachment}" Margin="15,5,0,0"/>
+        <Button Content="Save Bill File As" Grid.Row="3" Grid.Column="2" Command="{Binding SaveBillAttachment}" Margin="15,5,0,0"/>
+        
+        <CheckBox Content="Paid" Grid.Row="5" Grid.Column="1" IsChecked="{Binding IsAlreadyPaid, Mode=TwoWay}" VerticalAlignment="Center" />
 
-        <Label Content="{Binding ErrorString}" Grid.Row="5" Grid.Column="1"/>
     </Grid>
 </UserControl>

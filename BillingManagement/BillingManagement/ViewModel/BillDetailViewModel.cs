@@ -6,6 +6,7 @@ using BillingManagement.Model;
 using BillingManagement.Utils;
 using BillingManagement.View;
 using System.Collections.Generic;
+using System.IO;
 
 namespace BillingManagement.ViewModel
 {
@@ -14,6 +15,9 @@ namespace BillingManagement.ViewModel
         public ICommand OnRecordButtonClick { get; private set; }
         public ICommand OnCancel { get; private set; }
 
+        public ICommand ImportBillAttachment { get; private set; }
+        public ICommand SaveBillAttachment { get; private set; }
+
         public ObservableCollection<BillType> AllBillTypes
         {
             get
@@ -21,16 +25,6 @@ namespace BillingManagement.ViewModel
                 var allTypes = Enum.GetValues(typeof(BillType)).Cast<BillType>();
                 ObservableCollection<BillType> retCollection = new ObservableCollection<BillType>(allTypes);
                 return retCollection;
-            }
-        }
-
-        public string ErrorString
-        {
-            get { return _errString; }
-            set
-            {
-                _errString = value;
-                NotifyPropChanged(nameof(ErrorString));
             }
         }
 
@@ -94,19 +88,63 @@ namespace BillingManagement.ViewModel
             }
         }
 
-        public BillDetailViewModel(IBillReaderWriter billReaderWriter, NavigatorViewModel navigator)
+        public byte[] Attachement
+        {
+            get { return _bill.Attachement; }
+            private set
+            {
+                _bill.Attachement = value;
+            }
+        }
+
+        //TODO: implement IoC and put the following property together with billreaderwriter, filepicker, navigatorview into the IoC container 
+        public IPopUpWinService<string, string> PopUpService { get; set; } = null;
+
+        public BillDetailViewModel(IBillReaderWriter billReaderWriter, IPopUpWinService<string, byte[]> filePickerParser ,NavigatorViewModel navigator)
         {
             _bill.DueDate = DateTime.Now;
             _billReaderWriter = billReaderWriter;
             _navigator = navigator;
+            _filePickerParser = filePickerParser;
+
             if (_navigator.BillIdSelected > 0)
             {
                 LoadBillInfo(_navigator.BillIdSelected);
             }
             navigator.BillIdSelected = 0;
 
-            OnRecordButtonClick = new RelayCommand((_) => CanSave(), (_) => DoSave());
-            OnCancel = new RelayCommand((_) => { _navigator.ViewNameToDisplay = Constants.BillSearchView; });
+            OnRecordButtonClick = new RelayCommand(_ => CanSave(), _ => DoSave());
+            OnCancel = new RelayCommand(_ => { _navigator.ViewNameToDisplay = Constants.BillSearchView; });
+
+            ImportBillAttachment = new RelayCommand(_ => 
+            {
+                // TODO: disable this button while doing modal then enable it
+                // TODO: only save/load pdf
+                Attachement = new byte[] { };
+                _filePickerParser.DoModal();
+                Attachement = _filePickerParser.Output;
+            });
+
+            SaveBillAttachment = new RelayCommand(_ =>
+            {
+                if (BillName == "" || BillName == null)
+                    return;
+
+                if (Attachement == null || Attachement.Length < 1)
+                    return;
+
+                try
+                {
+                    File.WriteAllBytes($@".\{BillName}.pdf", Attachement);
+                }
+                catch(Exception e)
+                {
+                    if (PopUpService == null)
+                        return;
+                    PopUpService.Input = e.ToString();
+                    PopUpService.DoModal();
+                }
+            });
         }
 
         private bool CanSave()
@@ -119,17 +157,23 @@ namespace BillingManagement.ViewModel
 
         private void DoSave()
         {
+            // TODO: disable this while saving to db
             bool saveSuccess = _billReaderWriter.Record(_bill, out string error);
             bool navigatorNotNull = _navigator != null;
 
-            if (saveSuccess && navigatorNotNull)
+            if (saveSuccess)
             {
-               _navigator.ViewNameToDisplay = Constants.BillSearchView;
+                if (navigatorNotNull)
+                    _navigator.ViewNameToDisplay = Constants.BillSearchView;
+
+                return;
             }
-            else
-            {
-                ErrorString = error;
-            }
+
+            if (PopUpService == null)
+                return;
+            
+            PopUpService.Input = error;
+            PopUpService.DoModal();
         }
 
         private void LoadBillInfo(int billId)
@@ -139,9 +183,9 @@ namespace BillingManagement.ViewModel
                 _bill = listBills[0];
         }
 
-        private string _errString = "";
         private BillInfo _bill = new BillInfo();
         private IBillReaderWriter _billReaderWriter = null;
         private NavigatorViewModel _navigator = null;
+        IPopUpWinService<string, byte[]> _filePickerParser;
     }
 }

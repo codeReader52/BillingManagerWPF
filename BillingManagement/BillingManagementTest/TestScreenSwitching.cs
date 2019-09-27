@@ -25,7 +25,7 @@ namespace BillingManagementTest
         {
             NavigatorViewModel nav = new NavigatorViewModel();
             nav.ViewNameToDisplay = Constants.BillDetailView;
-            BillDetailViewModel bd = new BillDetailViewModel(new MockBillReaderWriter(), nav);
+            BillDetailViewModel bd = new BillDetailViewModel(new MockBillReaderWriter(), null, nav);
             bd.OnRecordButtonClick.Execute(null);
             Assert.AreEqual(nav.ViewNameToDisplay, Constants.BillSearchView);
 
@@ -47,7 +47,7 @@ namespace BillingManagementTest
 
             NavigatorViewModel nav = new NavigatorViewModel();
             nav.ViewNameToDisplay = Constants.BillDetailView;
-            BillDetailViewModel db = new BillDetailViewModel(readerWriter, nav);
+            BillDetailViewModel db = new BillDetailViewModel(readerWriter, null, nav);
             db.OnRecordButtonClick.Execute(null);
             Assert.AreEqual(nav.ViewNameToDisplay, Constants.BillDetailView);
         }
@@ -74,7 +74,7 @@ namespace BillingManagementTest
         {
             NavigatorViewModel nav = new NavigatorViewModel();
             nav.BillIdSelected = 1;
-            BillDetailViewModel _ = new BillDetailViewModel(new MockBillReaderWriter(), nav);
+            BillDetailViewModel _ = new BillDetailViewModel(new MockBillReaderWriter(), null, nav);
             Assert.AreEqual(nav.BillIdSelected, 0);
         }
 
@@ -86,7 +86,7 @@ namespace BillingManagementTest
 
             NavigatorViewModel nav = new NavigatorViewModel();
             nav.BillIdSelected = 2;
-            BillDetailViewModel billDetail = new BillDetailViewModel(readerWriter, nav);
+            BillDetailViewModel billDetail = new BillDetailViewModel(readerWriter, null, nav);
 
             BillInfo billInBillDetailModel = new BillInfo()
             {
@@ -95,7 +95,8 @@ namespace BillingManagementTest
                 Description = billDetail.Description,
                 DueDate = billDetail.DueDate,
                 Type = billDetail.BillType,
-                IsAlreadyPaid = billDetail.IsAlreadyPaid,                
+                IsAlreadyPaid = billDetail.IsAlreadyPaid,
+                Attachement = billDetail.Attachement
             };
 
             Assert.IsTrue(billInBillDetailModel.SameData(allBills[1]));

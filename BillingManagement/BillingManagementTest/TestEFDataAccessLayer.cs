@@ -155,6 +155,10 @@ namespace BillingManagementTest
             bill.Type = BillType.MiscSpending;
             ModifyAndSave(bill);
             CompareDbBillWithExpectedBill(bill);
+
+            bill.Attachement = new byte[] { 1, 2, 3 };
+            ModifyAndSave(bill);
+            CompareDbBillWithExpectedBill(bill);
         }
 
         [TestMethod]
