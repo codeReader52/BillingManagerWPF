@@ -28,10 +28,10 @@ namespace BillingManagement.Model
 
         public BillType Type { get; set; }
         public string Description { get; set; }
-        /*
+
         [Required]
         public bool IsAlreadyPaid { get; set; }
-        public byte[] Attachement { get; set; }*/
+        public byte[] Attachement { get; set; }
 
         public bool SameData(BillInfo other)
         {

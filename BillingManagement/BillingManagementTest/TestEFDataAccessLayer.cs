@@ -5,12 +5,13 @@ using System;
 using System.Collections.Generic;
 using System.Data.Entity.Migrations;
 using System.Linq;
+using System.Threading;
 
 namespace BillingManagementTest
 {
     // not ideal for unittest, but we need to test the data access layer
     // ignore most of the times, until we need to specifically test it
-    [Ignore]
+    
     [TestClass]
     public class TestEFDataAccessLayer
     {
@@ -19,9 +20,14 @@ namespace BillingManagementTest
 
         public object SqlLiteDbBillReaderWriter { get; private set; }
 
+        private static Mutex _mutex = new Mutex();
+        public TestContext TestContext { get; set; }
+
         [TestInitialize]
         public void SetUp()
         {
+            _mutex.WaitOne();
+            System.Diagnostics.Debug.WriteLine("Begin test " + TestContext.TestName);
             using (DataAccessLayer dbAccess = new DataAccessLayer(_connString))
             {
                 BillInfo dummy = new BillInfo { Type = BillType.Unknown, BillName = "", Amount = 0.0, DueDate = new DateTime(1990, 1, 1) };
@@ -46,6 +52,8 @@ namespace BillingManagementTest
         public void TearDown()
         {
             CleanDatabase();
+            System.Diagnostics.Debug.WriteLine("Finish test " + TestContext.TestName);
+            _mutex.ReleaseMutex();
         }
 
         private void CleanDatabase()
@@ -65,13 +73,18 @@ namespace BillingManagementTest
             string description = $"test description {expectedId}";
             string name = $"test name {expectedId}";
             DateTime dueDate = new DateTime(rnd.Next(2010, 2020), rnd.Next(1, 12), rnd.Next(1, 20));
+            byte[] attachement = new byte[10];
+            for (int i = 0; i < 10; i++)
+                attachement[i] = (byte)i;
             return new BillInfo
             {
                 Type = type,
                 BillName = name,
                 DueDate = dueDate,
                 Amount = amount,
-                Description = description
+                Description = description,
+                IsAlreadyPaid = amount > 0.5,
+                Attachement = attachement,
             };
         }
 
@@ -96,7 +109,7 @@ namespace BillingManagementTest
         }
 
         [TestMethod]
-        public void TestSqlListBillReaderWithFilter()
+        public void TestSqlListBillReaderWithFilterById()
         {
             IList<BillInfo> bills = new List<BillInfo>();
             foreach (int expectedId in new List<int> { _currId + 1, _currId + 2, _currId + 3 })
@@ -116,6 +129,18 @@ namespace BillingManagementTest
 
             IList<BillInfo> retBills2 = sqliteReader.GetBillByFilter(bill => bill.Id == -1);
             Assert.AreEqual(retBills2.Count, 0);
+        }
+
+        [TestMethod]
+        public void TestSqlListBillReaderWithFilterByDateTime()
+        {
+
+        }
+
+        [TestMethod]
+        public void TestSqlListBillReaderWithFilterByPaidStatus()
+        {
+
         }
 
         [TestMethod]
