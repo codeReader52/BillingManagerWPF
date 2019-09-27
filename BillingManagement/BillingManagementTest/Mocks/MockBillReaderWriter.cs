@@ -11,7 +11,30 @@ namespace BillingManagementTest.Mocks
     class MockBillReaderWriter : IBillReaderWriter
     {
         public BillInfo BillSaved = null;
+
+        public MockBillReaderWriter(DoGetAllBills doGetAll, DoRecord doRecord)
+        {
+            _doGetAllBills = doGetAll;
+            _doRecord = doRecord;
+        }
+
+        public MockBillReaderWriter()
+        {
+            _doGetAllBills = DefaultGetAllBills;
+            _doRecord = DefaultRecord;
+        }
+
         public IList<BillInfo> GetAllBills()
+        {
+            return _doGetAllBills();
+        }
+
+        public bool Record(BillInfo bill, out string errorString)
+        {
+            return _doRecord(bill, out errorString);
+        }
+
+        private IList<BillInfo> DefaultGetAllBills()
         {
             BillInfo bill1 = new BillInfo
             {
@@ -43,11 +66,22 @@ namespace BillingManagementTest.Mocks
             return new List<BillInfo> { bill1, bill2, bill3 };
         }
 
-        public bool Record(BillInfo bill, out string errorString)
+        private bool DefaultRecord(BillInfo bill, out string errorString)
         {
             errorString = "";
             BillSaved = bill;
             return true;
         }
+
+        public IList<BillInfo> GetBillByFilter(Func<BillInfo, bool> filter)
+        {
+            return GetAllBills().Where(filter).ToList();
+        }
+
+        public delegate IList<BillInfo> DoGetAllBills();
+        public delegate bool DoRecord(BillInfo bill, out string errorString);
+
+        private DoGetAllBills _doGetAllBills = null;
+        private DoRecord _doRecord = null;
     }
 }

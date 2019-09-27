@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows.Input;
+using BillingManagement.View;
 using BillingManagement.Utils;
+using BillingManagement.Model;
 
 namespace BillingManagement.ViewModel
 {
@@ -22,18 +24,17 @@ namespace BillingManagement.ViewModel
             }
         }
 
-        private string _childViewName = ViewModelViewManager.BillSearchView;
+        private string _childViewName = Constants.BillSearchView;
 
         public ICommand GoToBillDetail { get; private set; }
+        public int BillIdSelected { get; set; } = 0;
 
         public NavigatorViewModel()
         {
             GoToBillDetail = new RelayCommand((_) =>
             {
-                ViewNameToDisplay = ViewModelViewManager.BillDetailView;
+                ViewNameToDisplay = Constants.BillDetailView;
             });
         }
-
-        
     }
 }

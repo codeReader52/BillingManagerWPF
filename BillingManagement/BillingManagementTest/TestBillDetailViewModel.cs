@@ -16,7 +16,7 @@ namespace BillingManagementTest
         public void TestCreateNewBill()
         {
             MockBillReaderWriter billWriter = new MockBillReaderWriter();
-            BillDetailViewModel billDetail = new BillDetailViewModel(billWriter);
+            BillDetailViewModel billDetail = new BillDetailViewModel(billWriter, new NavigatorViewModel());
             billDetail.Amount = 1;
             billDetail.BillName = "Test name";
             billDetail.BillType = BillType.Food;
@@ -37,7 +37,7 @@ namespace BillingManagementTest
         public void TestBillDetailViewWillAlwaysGetAllBillTypes()
         {
             Mock<IBillReaderWriter> mockWriter = new Mock<IBillReaderWriter>();
-            BillDetailViewModel vm = new BillDetailViewModel(mockWriter.Object);
+            BillDetailViewModel vm = new BillDetailViewModel(mockWriter.Object, new NavigatorViewModel());
 
             Assert.AreEqual(vm.AllBillTypes.Count, 4);
             foreach (BillType type in new List<BillType> { BillType.Food, BillType.MiscSpending, BillType.Unknown, BillType.Utility })

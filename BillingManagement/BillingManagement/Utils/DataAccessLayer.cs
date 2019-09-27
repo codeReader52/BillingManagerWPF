@@ -2,10 +2,11 @@
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System;
+using System.Collections.Generic;
 
 namespace BillingManagement.Utils
 {
-    public class DataAccessLayer : DbContext, IDataProvider
+    public class DataAccessLayer : DbContext
     {
         private string _connectionString = "";
         public DataAccessLayer(string connectionString) : base()
@@ -24,49 +25,68 @@ namespace BillingManagement.Utils
 
         public DbSet<BillInfo> BillInfos { get; set; }
 
+        private bool Safe_SaveChange()
+        {
+            try
+            {
+                SaveChanges();
+                return true;
+            }
+            catch // horrible handling of exception here, dodgy jobs...
+            {
+                return false;
+            }
+        }
+
         public bool AddAndSave(object obj)
         {
             if (obj is BillInfo)
             {
                 BillInfos.Add(obj as BillInfo);
-                SaveChanges();
+                return Safe_SaveChange();
+            }
+            return false;
+        }
+
+        public bool FindData(Func<BillInfo, bool> filter, out IList<BillInfo> output)
+        {
+            IEnumerable<BillInfo> setBill = BillInfos.Where(filter);
+            if (setBill.Count() == 0)
+            {
+                output = new List<BillInfo>();
+                return false;
+            }
+
+            output = setBill.ToList();
+            return true;
+        }
+
+        public bool FindBillById(int id, out BillInfo bill)
+        {
+            IQueryable<BillInfo> bills = BillInfos.Where(_bill => _bill.Id == id);
+            bill = new BillInfo();
+            if (bills.Count() > 0)
+            {
+                bill = bills.First();
                 return true;
             }
             return false;
         }
 
-        public bool FindData(int id, out object output)
+        public bool ModifyAndSave(BillInfo inComingBillInfo)
         {
-            IQueryable<BillInfo> setBill = BillInfos.Where(b => b.Id == id);
-            if (setBill.Count() == 0)
+            if(FindBillById(inComingBillInfo.Id, out BillInfo existingBillInfo))
             {
-                output = null;
-                return false;
-            }
-
-            output = setBill.First();
-            return true;
-        }
-
-        public bool ModifyAndSave(int id, object obj)
-        {
-            if(obj is BillInfo && FindData(id, out object dbObj))
-            {
-                if (dbObj == null)
-                {
-                    return false;
-                }
-
-                BillInfo existingBillInfo = dbObj as BillInfo;
-                BillInfo inComingBillInfo = obj as BillInfo;
                 existingBillInfo.Amount = inComingBillInfo.Amount;
                 existingBillInfo.Description = inComingBillInfo.Description;
                 existingBillInfo.DueDate = inComingBillInfo.DueDate;
                 existingBillInfo.BillName = inComingBillInfo.BillName;
-                SaveChanges();
-                return true;
+                return Safe_SaveChange();
             }
-            return false;
+            else
+            {
+                return false;
+            }
         }
     }
 }

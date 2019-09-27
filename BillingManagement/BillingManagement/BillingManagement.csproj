@@ -172,15 +172,15 @@
     <Compile Include="Migrations\DataAccessLayerModelSnapshot.cs" />
     <Compile Include="Model\Constants.cs" />
     <Compile Include="Utils\DataAccessLayer.cs" />
-    <Compile Include="Utils\IDataProvider.cs" />
     <Compile Include="Utils\BillJsonReaderWriter.cs" />
     <Compile Include="Utils\BillTypeValueConverter.cs" />
     <Compile Include="Utils\IBillReaderWriter.cs" />
+    <Compile Include="Utils\SqliteDbBillReaderWriter.cs" />
     <Compile Include="ViewModel\BillDetailViewModel.cs" />
     <Compile Include="ViewModel\BillSearchViewModel.cs" />
     <Compile Include="ViewModel\NavigatorViewModel.cs" />
     <Compile Include="Utils\RelayCommand.cs" />
-    <Compile Include="Utils\ViewModelViewManager.cs" />
+    <Compile Include="View\ViewModelViewManager.cs" />
     <Compile Include="ViewModel\ViewModelWithNotifierBase.cs" />
     <Compile Include="View\BillDetailView.xaml.cs">
       <DependentUpon>BillDetailView.xaml</DependentUpon>

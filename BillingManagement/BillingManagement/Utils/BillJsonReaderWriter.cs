@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using BillingManagement.Model;
 using Newtonsoft.Json;
@@ -72,6 +73,11 @@ namespace BillingManagement.Utils
             jsonSerializer.Converters.Add(new JavaScriptDateTimeConverter());
             jsonSerializer.NullValueHandling = NullValueHandling.Ignore;
             return jsonSerializer;
+        }
+
+        public IList<BillInfo> GetBillByFilter(Func<BillInfo, bool> filter)
+        {
+            throw new NotImplementedException();
         }
 
         private string _dataFolder = "";

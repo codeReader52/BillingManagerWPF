@@ -2,21 +2,19 @@
 using System.Collections.Generic;
 using BillingManagement.ViewModel;
 using BillingManagement.Model;
+using BillingManagement.Utils;
 
-namespace BillingManagement.Utils
+namespace BillingManagement.View
 {
     public static class ViewModelViewManager
     {
-        public static string MainWindow = "MainWindow";
-        public static string BillDetailView = "BillDetailView";
-        public static string BillSearchView = "BillSearchView";
         private static NavigatorViewModel _navigator = null;
 
         public static IDictionary<string, Func<object>> MapViewNameToViewModelFactory = new Dictionary<string, Func<object>>
         {
-            { BillDetailView, GetBillDetailViewModel },
-            { BillSearchView, GetBillSearchViewModel },
-            { MainWindow, GetNavigator },
+            { Constants.BillDetailView, GetBillDetailViewModel },
+            { Constants.BillSearchView, GetBillSearchViewModel },
+            { Constants.MainWindow, GetNavigator },
         };
 
         private static NavigatorViewModel GetNavigator()
@@ -27,19 +25,17 @@ namespace BillingManagement.Utils
 
         private static BillSearchViewModel GetBillSearchViewModel()
         {
-            IBillReaderWriter reader = new BillJsonReaderWriter(Constants.BILLING_FOLDER);
-            return new BillSearchViewModel(reader, _navigator);
+            return new BillSearchViewModel(new SqliteDbBillReaderWriter(Constants.CONN_STRING), _navigator);
         }
 
         private static BillDetailViewModel GetBillDetailViewModel()
         {
-            IBillReaderWriter writer = new BillJsonReaderWriter(Constants.BILLING_FOLDER);
-            return new BillDetailViewModel(writer);
+            return new BillDetailViewModel(new SqliteDbBillReaderWriter(Constants.CONN_STRING), _navigator);
         }
 
         public static bool IsChildView(string viewName)
         {
-            if (viewName == MainWindow)
+            if (viewName == Constants.MainWindow)
                 return false;
             else
                 return true;

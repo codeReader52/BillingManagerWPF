@@ -11,5 +11,6 @@ namespace BillingManagement.Utils
     {
         IList<BillInfo> GetAllBills();
         bool Record(BillInfo bill, out string errorString);
+        IList<BillInfo> GetBillByFilter(Func<BillInfo, bool> filter);
     }
 }

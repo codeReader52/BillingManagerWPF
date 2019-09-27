@@ -29,7 +29,5 @@ namespace BillingManagement.View
                 ((FrameworkElement)obj).DataContext = factoryFunction();
             }
         }
-
-        
     }
 }

@@ -15,18 +15,27 @@
 
     <StackPanel Orientation = "Vertical">
         <StackPanel Orientation="Horizontal">
-            <Button Content="Add Bill" Command="{Binding AddBill}" Margin="10" Padding="5"/>
-            <Button Content="Go Back" Command="{Binding OnGoHome}" Margin="10" Padding="5"/>           
+            <Button Content="Add Bill" Command="{Binding AddBill}" Margin="10" Padding="30,5,30,5"/>
         </StackPanel>
-        <ListBox HorizontalContentAlignment="Stretch" ItemsSource="{Binding BillList}">
-            <ListBox.ItemTemplate>
-                <DataTemplate>
-                    <StackPanel Orientation="Vertical" Margin="10">
-                        <TextBlock Text="{Binding BillName, Mode=OneWay, StringFormat= Bill Name: {0}}"/>
-                        <TextBlock Text="{Binding Amount, Mode=OneWay, StringFormat=Amount Oustanding: ${0}}"/>
-                    </StackPanel>
-                </DataTemplate>
-            </ListBox.ItemTemplate>
-        </ListBox>
+        <DataGrid ItemsSource="{Binding BillList}" SelectedItem="{Binding Path=SelectedBill, Mode=OneWayToSource}"
+                  AlternatingRowBackground = "#FFF5F9F9" AlternationCount = "1" AutoGenerateColumns = "False" 
+                  FontSize="13" HorizontalAlignment="Left" FontFamily="Times New Roman" VerticalContentAlignment="Center">
+            <DataGrid.InputBindings>
+                <MouseBinding Gesture="LeftDoubleClick" Command="{Binding OnGridDataRowClicked}" CommandParameter="{Binding SelectedBill}"/>
+            </DataGrid.InputBindings>
+            <DataGrid.Columns>
+                <DataGridTextColumn Header = "Name" Binding = "{Binding BillName}" IsReadOnly="True" Width="300"/>
+                <DataGridTextColumn Header = "Amount" Binding = "{Binding Amount}" IsReadOnly="True" Width="200"/>
+                <DataGridTextColumn Header = "Due Date" Binding = "{Binding DueDate}" IsReadOnly="True" Width="200"/>
+                <DataGridTextColumn Header = "Type" Binding = "{Binding Type}" IsReadOnly="True" Width="150"/>
+                <DataGridTextColumn Header = "Description" Binding="{Binding Description}" IsReadOnly="True"  Width="650">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style>
+                            <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+            </DataGrid.Columns>
+        </DataGrid>
     </StackPanel>    
 </UserControl>
