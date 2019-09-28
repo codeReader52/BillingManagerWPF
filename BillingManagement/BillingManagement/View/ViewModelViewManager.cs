@@ -24,7 +24,9 @@ namespace BillingManagement.View
 
         private static BillSearchViewModel GetBillSearchViewModel()
         {
-            return new BillSearchViewModel(new SqliteDbBillReaderWriter(Constants.CONN_STRING), _navigator);
+            BillSearchViewModel bsvm = new BillSearchViewModel(new SqliteDbBillReaderWriter(Constants.CONN_STRING), _navigator);
+            bsvm.FilterByDateFrom = new DateTime(DateTime.Now.Year, 1, 1);
+            return bsvm;
         }
 
         private static BillDetailViewModel GetBillDetailViewModel()

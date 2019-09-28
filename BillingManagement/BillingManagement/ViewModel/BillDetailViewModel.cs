@@ -117,8 +117,7 @@ namespace BillingManagement.ViewModel
             OnCancel = new RelayCommand(_ => { _navigator.ViewNameToDisplay = Constants.BillSearchView; });
 
             ImportBillAttachment = new RelayCommand(_ => 
-            {
-                // TODO: disable this button while doing modal then enable it
+            {                
                 // TODO: only save/load pdf
                 Attachement = new byte[] { };
                 _filePickerParser.DoModal();

@@ -5,21 +5,40 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:BillingManagement.View"
              xmlns:vm="clr-namespace:BillingManagement.ViewModel"
+             xmlns:utils="clr-namespace:BillingManagement.Utils"
              local:ViewModelLocator.LoadDataContext="True"
              mc:Ignorable="d" 
              d:DesignHeight="800" d:DesignWidth="1600">
 
     <UserControl.Resources>
         <vm:NavigatorViewModel x:Key="Navigator" />
+        <utils:BillPaidStatusFilterConverter x:Key="PaidStatusConverter" />
     </UserControl.Resources>
 
     <StackPanel Orientation = "Vertical">
         <StackPanel Orientation="Horizontal">
-            <Button Content="Add Bill" Command="{Binding AddBill}" Margin="10" Padding="30,5,30,5"/>
+            <Button Content="Get Bill" Command="{Binding RequestBills}" VerticalAlignment="Center" Margin="30,0" Padding="30,5,30,5"/>            
+            <GroupBox Header="Filter" VerticalAlignment="Center" Margin="30,0,0,5">
+                <StackPanel Orientation="Horizontal">
+                    <ComboBox VerticalAlignment="Center" Width="100" ItemsSource="{Binding AllPaidStatusFilters}" SelectedItem="{Binding FilterByPaidStatus}">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Converter={StaticResource PaidStatusConverter}}"/>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+                    <Label VerticalAlignment="Center" Margin="30,0,0,0">Date From:</Label>
+                    <DatePicker VerticalAlignment="Center" Margin="0,0,20,0" VerticalContentAlignment="Center" SelectedDate="{Binding FilterByDateFrom}"/>
+                    
+                </StackPanel>
+            </GroupBox>
+
+            <Button Content="Add Bill" Command="{Binding AddBill}" VerticalAlignment="Center" Margin="30,0" Padding="30,5,30,5"/>
         </StackPanel>
         <DataGrid ItemsSource="{Binding BillList}" SelectedItem="{Binding Path=SelectedBill, Mode=OneWayToSource}"
                   AlternatingRowBackground = "#FFF5F9F9" AlternationCount = "1" AutoGenerateColumns = "False" 
-                  FontSize="13" HorizontalAlignment="Left" FontFamily="Times New Roman" VerticalContentAlignment="Center">
+                  FontSize="13" HorizontalAlignment="Left" FontFamily="Times New Roman" VerticalContentAlignment="Center" 
+                  GridLinesVisibility="None" BorderThickness="1">
             <DataGrid.InputBindings>
                 <MouseBinding Gesture="LeftDoubleClick" Command="{Binding OnGridDataRowClicked}" CommandParameter="{Binding SelectedBill}"/>
             </DataGrid.InputBindings>

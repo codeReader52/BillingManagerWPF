@@ -175,9 +175,10 @@
     </Compile>
     <Compile Include="Migrations\DataAccessLayerModelSnapshot.cs" />
     <Compile Include="Model\Constants.cs" />
+    <Compile Include="Utils\Converters\BillPaidStatusFilterConverter.cs" />
     <Compile Include="Utils\DataUtils\DataAccessLayer.cs" />
     <Compile Include="Utils\DataUtils\BillJsonReaderWriter.cs" />
-    <Compile Include="Utils\DataUtils\BillTypeValueConverter.cs" />
+    <Compile Include="Utils\Converters\BillTypeValueConverter.cs" />
     <Compile Include="Utils\DataUtils\IBillReaderWriter.cs" />
     <Compile Include="Utils\DataUtils\SqliteDbBillReaderWriter.cs" />
     <Compile Include="Utils\UiUtils\FileToByteStreamUiService.cs" />

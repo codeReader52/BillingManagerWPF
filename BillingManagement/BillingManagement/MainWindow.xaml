@@ -43,6 +43,11 @@
             <Setter Property="VerticalAlignment" Value="Center" />
             <Setter Property="VerticalContentAlignment" Value="Center" />
         </Style>
+
+        <Style TargetType="{x:Type DatePickerTextBox}">
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+            <Setter Property="Padding" Value="20,3,20,0" />
+        </Style>
     </Window.Resources>
     
     <ContentControl>
