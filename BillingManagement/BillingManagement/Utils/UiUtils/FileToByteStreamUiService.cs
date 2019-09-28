@@ -28,7 +28,7 @@ namespace BillingManagement.Utils
                 }
                 catch (Exception e)
                 {
-                    MessageBox.Show($"Unable to parse file due to error: {e.ToString()}.\nNothing is saved.");
+                    MessageBox.Show($"Unable to parse file due to error: {e.Message}.\nNothing is saved.");
                 }
             }
             else

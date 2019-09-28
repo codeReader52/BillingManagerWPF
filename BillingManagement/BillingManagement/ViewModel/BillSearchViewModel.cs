@@ -31,6 +31,7 @@ namespace BillingManagement.ViewModel
         public ICommand OnGridDataRowClicked { get; private set; }
         public ICommand RequestBills { get; private set; }
 
+        public IPopUpWinService<string, string> PopUpWinService { get; set; } = null;
 
         public BillSearchViewModel(IBillReaderWriter billReaderWriter, NavigatorViewModel navigator)
         {
@@ -71,7 +72,22 @@ namespace BillingManagement.ViewModel
             SelectedBill = new BillInfo();
             Predicate<BillInfo> filterByPaidStatus = GetFilterByPaidStatus();
             Predicate<BillInfo> filterByDateTime = GetFilterByDateTime();
-            IList<BillInfo> bills = _billReaderWriter.GetBillByFilter(bill => filterByPaidStatus(bill) && filterByDateTime(bill));
+            IList<BillInfo> bills = new List<BillInfo>();
+            try
+            {
+               bills = _billReaderWriter.GetBillByFilter(bill => filterByPaidStatus(bill) && filterByDateTime(bill));
+            }
+            catch (Exception e)
+            {
+                if (PopUpWinService == null)
+                {
+                    return;
+                }
+
+                PopUpWinService.Input = e.Message;
+                PopUpWinService.DoModal();
+            }
+            
             foreach (BillInfo bill in bills)
             {
                 BillList.Add(bill);

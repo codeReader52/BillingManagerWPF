@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using BillingManagement.ViewModel;
 using BillingManagement.Model;
 using BillingManagement.Utils;
+using BillingManagement.Utils.UiUtils;
 
 namespace BillingManagement.View
 {
@@ -26,15 +27,18 @@ namespace BillingManagement.View
         {
             BillSearchViewModel bsvm = new BillSearchViewModel(new SqliteDbBillReaderWriter(Constants.CONN_STRING), _navigator);
             bsvm.FilterByDateFrom = new DateTime(DateTime.Now.Year, 1, 1);
+            bsvm.PopUpWinService = new MessageBoxService();
             return bsvm;
         }
 
         private static BillDetailViewModel GetBillDetailViewModel()
         {
-            return new BillDetailViewModel(
+            BillDetailViewModel bdvm = new BillDetailViewModel(
                 new SqliteDbBillReaderWriter(Constants.CONN_STRING), 
                 new FileToByteStreamUiService(), 
                 _navigator);
+            bdvm.PopUpService = new MessageBoxService();
+            return bdvm;
         }
 
         public static bool IsChildView(string viewName)

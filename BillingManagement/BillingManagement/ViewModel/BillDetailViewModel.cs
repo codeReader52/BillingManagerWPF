@@ -140,7 +140,7 @@ namespace BillingManagement.ViewModel
                 {
                     if (PopUpService == null)
                         return;
-                    PopUpService.Input = e.ToString();
+                    PopUpService.Input = e.Message;
                     PopUpService.DoModal();
                 }
             });
@@ -157,6 +157,7 @@ namespace BillingManagement.ViewModel
         private void DoSave()
         {
             // TODO: disable this while saving to db
+            // TODO: do proper error handling here, sketchy stuff currently being done
             bool saveSuccess = _billReaderWriter.Record(_bill, out string error);
             bool navigatorNotNull = _navigator != null;
 
@@ -171,7 +172,7 @@ namespace BillingManagement.ViewModel
             if (PopUpService == null)
                 return;
             
-            PopUpService.Input = error;
+            PopUpService.Input = string.IsNullOrEmpty(error) ? "Some thing wrong happend. Nothing is saved." : error;
             PopUpService.DoModal();
         }
 
